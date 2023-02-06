@@ -6,6 +6,9 @@ pygame.init()
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Combat-Atari")
 
+pygame.joystick.init()
+joysticks = [pygame.joystick.Joystick(i) for i in range(pygame.joystick.get_count())]
+
 tank_sprites = pygame.sprite.Group()
 tank1 = Tank(tank_1, 40, 280, 0)
 tank2 = Tank(tank_2, 730, 280, 8)
@@ -48,6 +51,32 @@ class Game:
             if event.type == pygame.QUIT:
                 pygame.quit()
                 exit()
+
+            if event.type == pygame.JOYBUTTONDOWN:
+                if event.button == 0:
+                    tank2.move_w()
+                if event.button == 2:
+                    tank2.shoot_()
+
+            if event.type == pygame.JOYBUTTONUP:
+                if event.button == 0:
+                    tank2.no_move_w()
+
+            if event.type == pygame.JOYAXISMOTION:
+
+                if event.axis == 0:
+                    if abs(event.value) > 0.1:
+                        tank2.rotate(rot_speed)
+
+                    else:
+                        tank2.no_rot()
+
+                elif event.axis == 1:
+                    if abs(event.value) > 0.2:
+                        tank2.rotate(-rot_speed)
+
+                    else:
+                        tank2.no_rot()
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_a:
